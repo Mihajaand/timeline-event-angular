@@ -1,0 +1,39 @@
+.entete{
+    padding: 0px !important;
+    ion-list-header{
+        margin: 0px !important;
+        padding: 0px !important;
+        min-height: 20px !important;
+        ion-item::part(native){
+            background-color: #5488a86b;
+            color: white;
+            font-weight: bolder;
+            border-bottom:2px solid black
+        }
+        ion-badge {
+            margin-left: 5px
+        }
+        ion-label{
+            margin: 0px !important;
+        }
+    }
+}
+.left-header-buttons{
+    ion-button{
+        --padding-bottom:2px;
+        --padding-end:2px;
+        --padding-start:2px;
+        --padding-top:2px;
+        --border-radius:5px;
+        width: 33%;
+        margin: 0;
+        margin-top:5px;
+
+    }
+}
+.sc-ion-buttons-md-s ion-icon[slot=start]{
+    margin-right: 0 !important;
+}
+ion-badge{
+    font-size: 10px;
+}

@@ -1,0 +1,97 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+@use '@angular/material' as mat;
+
+@include mat.core();
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+//@import '@ionic/angular/css/palettes/dark.system.css';
+//@import '@ionic/angular/css/palettes/dark.system.css';
+@import '@angular/cdk/overlay-prebuilt.css';
+@import './node_modules/@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss';
+.ngx-contextmenu {
+    .ngx-context-menu-item[role=menuitem] {
+        padding: 0;
+        padding-right: 5px;
+        width: 100%;
+
+        ion-item {
+            width: 100%
+        }
+    }
+}
+
+ion-modal::part(content) {
+    max-width: 1600px !important;
+    max-height: 800px !important;
+    top: 0;
+    position: absolute;
+    width: auto;
+    height: auto;
+}
+
+ion-modal.second-modal {
+    background-color: #03030385;
+}
+
+ion-modal.second-modal::part(content) {
+    height: 600px !important;
+}
+
+ion-modal.employers-modal {
+    background-color: #03030385;
+    ion-item::part(native) {
+        padding-left:0 !important;
+        cursor: pointer;
+    }
+}
+
+ion-modal.employers-modal::part(content) {
+    height: 600px !important;
+}
+
+ion-modal.add-client-modal > .ion-page {
+    height: 600px !important;
+}
+
+.textarea-wrapper-inner {
+    .native-wrapper {
+        textarea {
+            border: 1px solid lightgray;
+            border-radius: 5px;
+            padding: 5px !important;
+        }
+    }
+}

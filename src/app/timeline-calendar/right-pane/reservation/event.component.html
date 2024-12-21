@@ -1,0 +1,143 @@
+<div (dblclick)="editReservation( reservation, true )" #resizeBox
+     (contextmenu)="getMouseCoordinates($event)"
+     [contextMenu]="rightClickEditMenu"
+     [contextMenuValue]="{reservation}"
+     class="cal-event-container cal-draggable cal-starts-within-day cal-ends-within-day"
+     dragactiveclass="cal-drag-active"
+     cdkDrag
+     [style.top]="(reservation.topPos||0)+'px'"
+     [style.width]="(reservation.width||0)+'px'"
+     [style.left]="(reservation.leftPos||0)+'px'"
+     [style.height]="height+'px'"
+     mwlResizable
+     [enableGhostResize]="true"
+     KesikelyReservationToolTip
+     [reservation]="reservation"
+     [choixActuel]="choixActuel"
+     [options]="options"
+>
+  <span cdkDragLockAxis="x"
+        mwlResizeHandle
+        [resizeEdges]="{top: true}"
+        #dragHandleTop
+        class="cal-resize-handle dragHandle cal-resize-handle-top"
+        cdkDrag
+        style="transform: none !important"
+        [style.background-color]="'none'"
+        (cdkDragEnded)="dragMove(dragHandleLeft, $event,'top')"></span>
+  <span cdkDragLockAxis="x"
+        mwlResizeHandle
+        [resizeEdges]="{left: true}"
+        #dragHandleLeft
+        [style.height]="handleHeight+'px'"
+        class="cal-resize-handle dragHandle cal-resize-handle-before-start"
+        cdkDrag
+        style="transform: none !important;border-left:1px solid lightgray"
+        [style.background-color]="'none'"
+        (cdkDragEnded)="dragMove(dragHandleLeft, $event,'left')"></span>
+
+  <div class="event-text-container" style="height: 100%">
+    <!--container-->
+    <div role="application" tabindex="0" class="cal-event"
+         [style.background]="reservation.employer2 ? 'linear-gradient('+getBgColors('couleur',reservation)+','+reservation.employer2.couleur+')':getBgColors('couleur',reservation)"
+         style="border:1px solid lightgray"
+    >
+        <div class="cal-event-title" [innerHTML]="reservation.eventText" style="width:100%; text-overflow: ellipsis; overflow: hidden;height: 100%; vertical-align:middle"
+             [style.line-height]="(height/2)+'px'"
+             [style.color]="getBgColors('couleurTexte',reservation)"
+        ></div>
+    </div>
+  </div>
+  <span cdkDragLockAxis="x"
+        mwlResizeHandle
+        [resizeEdges]="{right: true}"
+        class="cal-resize-handle dragHandle cal-resize-handle-after-end"
+        #dragHandleRight
+        cdkDrag
+        [style.height]="handleHeight+'px'"
+        style="transform: none !important;border-right:1px solid lightgray"
+        [style.background-color]="'none'"
+        (cdkDragEnded)="dragMove(dragHandleRight, $event, 'right')"></span>
+  <span cdkDragLockAxis="y"
+        mwlResizeHandle
+        [resizeEdges]="{bottom: true}"
+        class="cal-resize-handle dragHandle cal-resize-handle-bottom"
+        #dragHandleBottom
+        cdkDrag
+        style="transform: none !important"
+        [style.background-color]="'none'"
+        [style.top]="(height-4)+'px'"
+        (cdkDragEnded)="dragMove(dragHandleRight, $event, 'bottom')"></span>
+
+</div>
+<context-menu #rightClickEditMenu>
+  <ng-template contextMenuItem (execute)="editReservation($event.value.reservation)">
+    <ion-item [button]="true">
+      <ion-icon icon="create-outline" slot="start" color="success"></ion-icon>
+      <ion-label color="success">Ouvrir la réservation</ion-label>
+    </ion-item>
+  </ng-template>
+  <ng-template contextMenuItem (execute)="addComment()">
+    <ion-item [button]="true">
+      <ion-icon icon="archive-outline" slot="start" color="default"></ion-icon>
+      <ion-label color="default">Ajouter un commentaire</ion-label>
+    </ion-item>
+  </ng-template>
+  <ng-template contextMenuItem [divider]="true"></ng-template>
+  <ng-template contextMenuItem (execute)="dupliquer($event.value.reservation)">
+    <ion-item [button]="true">
+      <ion-icon icon="copy-outline" slot="start" color="secondary"></ion-icon>
+      <ion-label color="secondary">Dupliquer</ion-label>
+    </ion-item>
+  </ng-template>
+  <ng-template contextMenuItem (execute)="decouper($event)">
+    <ion-item [button]="true">
+      <ion-icon icon="cut-outline" slot="start" color="primary"></ion-icon>
+      <ion-label color="primary">Découper</ion-label>
+    </ion-item>
+    <ng-template contextMenuItem (execute)="editReservation($event.value.reservation)">
+      <ion-item [button]="true">
+        <ion-icon icon="copy-outline" slot="start" color="danger"></ion-icon>
+        <ion-label color="danger">Chambre bloquee (b.)</ion-label>
+      </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem [divider]="true"></ng-template>
+  </ng-template>
+  <!--<ng-template contextMenuItem (execute)="supprimer($event.value.event)">
+    <ion-item [button]="true">
+      <ion-icon icon="trash-outline" slot="start" color="danger"></ion-icon>
+      <ion-label color="danger">Supprimer</ion-label>
+    </ion-item>
+  </ng-template>-->
+  <ng-template contextMenuItem (execute)="desactiver($event.value.reservation)">
+    <ion-item [button]="true">
+      <ion-icon icon="arrow-undo-circle-outline" slot="start" color="danger"></ion-icon>
+      <ion-label color="danger">Annuler la reservation</ion-label>
+    </ion-item>
+  </ng-template>
+  <ng-template contextMenuItem [divider]="true"></ng-template>
+  <ng-template contextMenuItem (execute)="changeReservationStatut($event.value.reservation,statutArriveeClient)" [visible]="reservation.status != 1">
+    <ion-item [button]="true" [disabled]="reservation.status == 1">
+      <ion-icon icon="person" slot="start" color="default"></ion-icon>
+      <ion-label color="default">Faire l'arrivée de ce client</ion-label>
+    </ion-item>
+  </ng-template>
+  <ng-template contextMenuItem [divider]="true" [disabled]="reservation.status == 1" [visible]="reservation.status != 1"></ng-template>
+  <ng-template contextMenuItem (execute)="editReservation($event.value.reservation)">
+    <ion-item [button]="true">
+      <ion-icon icon="eye" slot="start" color="secondary"></ion-icon>
+      <ion-label color="secondary">Afficher tout les tarifs à la date</ion-label>
+    </ion-item>
+  </ng-template>
+
+</context-menu>
+
+
+<ng-template #template>
+  <div style="display: flex; flex-direction: column; width:300px; font-size:11px;padding:5px"
+  [style.background-color]="reservation.table.couleur"
+  [style.color]="this.reservation.table.couleurTexte"
+  >
+    <div [innerHTML]="reservationTooltipHtml"></div>
+  </div>
+</ng-template>

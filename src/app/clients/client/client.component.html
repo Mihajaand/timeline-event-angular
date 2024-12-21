@@ -1,0 +1,161 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title [innerText]="client.id > 0 ?'Modifier un client':'Ajouter un client'"></ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content style="min-height: 300px;width:1024px">
+    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" style="padding:20px">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="categorieClient" label="Type de client"
+                                    (ionChange)="changeCategory($event)"
+                                    label-placement="floating">
+                            <ion-select-option *ngFor="let categorie of categories" [value]="categorie.value"
+                                               [innerHTML]="categorie.label"></ion-select-option>
+                        </ion-select>
+                        <ion-note color="danger" *ngIf="getFormControlError('categorieClient', 'required')">
+                            Catégorie de client requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col [size]="isEntreprise?6:12">
+                    <ion-item>
+                        <ion-select formControlName="civilite" label="Civilité"
+                                    label-placement="floating">
+                            <ion-select-option *ngFor="let civilite of civilites" [value]="civilite.value"
+                                               [innerHTML]="civilite.label"></ion-select-option>
+                        </ion-select>
+                        <ion-note color="danger" *ngIf="getFormControlError('civilite', 'required')">
+                            Civilité requise.
+                        </ion-note>
+                    </ion-item>
+                    <ion-row>
+                        <ion-col size="6">
+                            <ion-item>
+                                <ion-input type="text" formControlName="nom" label="Nom"
+                                           label-placement="floating" style="text-transform: uppercase"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('nom', 'required')">
+                                    Nom requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="6">
+                            <ion-item>
+                                <ion-input type="text" formControlName="prenom" label="Prénoms"
+                                           label-placement="floating"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('prenom', 'required')">
+                                    Prénoms requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="6">
+                            <ion-item>
+                                <ion-input type="text" formControlName="tel" label="Tél 1" (input)="applyMask(1,$event)"
+                                           label-placement="floating"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('tel', 'required')">
+                                    Tel 1 requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col>
+                            <ion-item>
+                                <ion-input type="text" formControlName="tel2" label="Tél 2" (input)="applyMask(2,$event)"
+                                           label-placement="floating"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('tel2', 'required')">
+                                    Tel 2 requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
+                    <ion-item>
+                        <ion-input type="email" formControlName="email" label="Email"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('email', 'email')">
+                            Email requise.
+                        </ion-note>
+                    </ion-item>
+                    <ion-item>
+                        <ion-input type="date" formControlName="dateNaissance" label="Date de naissance"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('dateNaissance', 'required')">
+                            Date de naissance requise.
+                        </ion-note>
+                    </ion-item>
+                    <ion-item>
+                        <ion-avatar slot="start" style="border:1px solid lightgray">
+                            <img [src]="client?.pays?.flagBase64" [alt]="'Drapeau de ' + client?.pays?.name"
+                                 *ngIf="client.pays !== undefined"/>
+                            <ion-icon *ngIf="client.pays === undefined" name="flag" size="large"
+                                      style="margin-left:6px; margin-top:6px"></ion-icon>
+                        </ion-avatar>
+                        <ion-input
+                            [value]="client.pays === undefined ?'Veuillez sélectionner une nationalité':client?.pays?.name+' - '+client?.pays?.nationality"
+                            label="Nationalité" label-placement="floating" readonly/>
+                        <ion-button (click)="changePays()">Modifier</ion-button>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="6" *ngIf="isEntreprise">
+                    <ion-item>
+                        <ion-input type="text" formControlName="raisonSociale" label="Raison sociale" style="text-transform: uppercase"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('raisonSociale', 'required')">
+                            Raison sociale requise.
+                        </ion-note>
+                    </ion-item>
+                    <ion-item>
+                        <ion-input type="text" formControlName="nif" label="NIF"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('nif', 'required')">
+                            NIF requis.
+                        </ion-note>
+                    </ion-item>
+                    <ion-item>
+                        <ion-input type="text" formControlName="cif" label="CIF"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('cif', 'required')">
+                            CIF requis.
+                        </ion-note>
+                    </ion-item>
+                    <ion-item>
+                        <ion-input type="text" formControlName="stat" label="STAT"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('stat', 'required')">
+                            STAT requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="observation" label="Observations"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('observation', 'required')">
+                            Observation requiss.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" [disabled]="clientForm.invalid" (click)="onSubmit()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

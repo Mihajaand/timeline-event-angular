@@ -1,0 +1,69 @@
+<kesykely-header *ngIf="!isModal"></kesykely-header>
+<ion-header *ngIf="isModal">
+    <ion-toolbar>
+        <ion-title><h1>Liste des stocks</h1></ion-title>
+        <ion-button (click)="nouveauStock()" slot="end" color="success" fill="outline">
+            <ion-icon icon="add"></ion-icon>
+            Nouveau stock
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+<ion-item *ngIf="!isModal">
+    <ion-button (click)="nouveauStock()" slot="end" color="success" fill="outline">
+        <ion-icon icon="add"></ion-icon>
+        Nouveau stock
+    </ion-button>
+</ion-item>
+<ion-content style="min-height: 300px; height:500px; padding:20px" [fullscreen]="!isModal"
+             [style.width]="isModal?'1024px':'100%'">
+    <ion-list style="width: 75%; margin:0 auto">
+        <ion-item>
+            <ion-label>
+                <strong>Désignation</strong>
+            </ion-label>
+            <ion-label>
+                <strong>Qté disponible</strong>
+            </ion-label>
+            <ion-label>
+                <strong>Prix</strong>
+            </ion-label>
+            <ion-label>
+                <strong>Durée du prix</strong>
+            </ion-label>
+            <ion-label>&nbsp;</ion-label>
+        </ion-item>
+        <ion-item *ngFor="let stock of stocks">
+            <ion-label>
+                <h3>{{ stock.name }}</h3>
+            </ion-label>
+            <ion-label>
+                {{ stock.qte }}
+            </ion-label>
+            <ion-label>
+                {{ stock.prix }}
+            </ion-label>
+            <ion-label>
+                {{dureePrix[stock.dureePrix]}}
+            </ion-label>
+            <ion-label class="ion-text-right">
+                <ion-button color="success" fill="outline" *ngIf="isModal" (click)="selectStock(stock)">
+                    <ion-icon icon="checkmark-circle-outline" slot="start"></ion-icon>
+                    Sélectionner
+                </ion-button>
+                <ion-button color="secondary" fill="outline" *ngIf="!isModal" (click)="editStock(stock)">
+                    <ion-icon icon="create" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button color="danger" fill="outline" *ngIf="!isModal" (click)="deleteStock(stock)">
+                    <ion-icon icon="trash" slot="icon-only"></ion-icon>
+                </ion-button>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

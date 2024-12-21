@@ -1,0 +1,19 @@
+<div
+  class="mwl-calendar-week-view-hour-segment"
+  [class]="table['type']+'Color'"
+  [style.height]="options.columnHeight+'px'"
+  [contextMenu]="rightClickAddMenu"
+  [contextMenuValue]="{hour}"
+(dblclick)="addEvent($event)">
+  <div
+  class="cal-hour-segment cal-hour-start"
+  [style.height]="options.columnHeight+'px'">
+</div>
+<context-menu #rightClickAddMenu>
+  <ng-template *ngIf="showContextMenu" contextMenuItem (execute)="addEvent($event.value)">
+    <ion-item [button]="true">
+      <ion-icon icon="add-circle-outline" slot="start" color="primary"></ion-icon>
+      <ion-label color="primary">Ajouter une réservation</ion-label>
+    </ion-item>
+  </ng-template>
+</context-menu>

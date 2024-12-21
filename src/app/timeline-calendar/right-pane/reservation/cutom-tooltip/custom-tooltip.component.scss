@@ -1,0 +1,23 @@
+.reservation-tooltip-container {
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 5px;
+    border-radius: 5px;
+    background: linear-gradient(#FFFFFF 0px, #E4E5F0 100%);
+    *{
+        font-size: 12px !important;
+    }
+    > div {
+        >div{
+            >div{
+                display:flex; flex-direction: column
+            }
+        }
+        width: 500px !important;
+        font-size: 12px !important;
+
+        * {
+            font-size: 12px !important;
+        }
+    }
+}

@@ -1,0 +1,61 @@
+<div class="left-pane">
+    <ion-buttons class="left-header-buttons">
+        <ion-button (click)="showStayOver = !showStayOver" [fill]="showStayOver ? 'outline':'clear'" [color]="showStayOver?'success':'medium'" size="small">
+            <ion-icon slot="start" [name]="showStayOver ?'checkmark-outline':'close-outline'"></ion-icon>
+            <ion-label style="font-size:10px !important">StayOver</ion-label>
+        </ion-button>
+        <ion-button (click)="showCheckIn = !showCheckIn" [fill]="showCheckIn ? 'outline':'clear'" [color]="showCheckIn?'success':'medium'" size="small">
+            <ion-icon slot="start" [name]="showCheckIn ?'checkmark-outline':'close-outline'"></ion-icon>
+            <ion-label style="font-size:10px !important">Check-In</ion-label>
+        </ion-button>
+        <ion-button (click)="showCheckOut = !showCheckOut" [fill]="showCheckOut ? 'outline':'clear'" [color]="showCheckOut?'success':'medium'" size="small">
+            <ion-icon slot="start" [name]="showCheckOut ?'checkmark-outline':'close-outline'"></ion-icon>
+            <ion-label style="font-size:10px !important">Check-Out</ion-label>
+        </ion-button>
+    </ion-buttons>
+    <ion-list inset="true" mode="ios" lines="none" class="entete" *ngIf="showStayOver">
+        <ion-list-header>
+            <ion-item style="width: 100%">
+                <ion-badge slot="start" style="margin-right: 0">{{presents.length}}</ion-badge>
+                <ion-badge slot="end" color="danger"><img src="{{personBase64}}" style="width:10px;filter: invert(100%);-webkit-filter: invert(100%);"/> {{presentsPersons}}</ion-badge>
+                <ion-label>Présents (StayOver) :</ion-label>
+            </ion-item>
+        </ion-list-header>
+        <kesy-left-pane-item
+            [data]="presents"
+            [Loaded]="loaded"
+            [options]="options"
+            [choixActuel]="choixActuel"></kesy-left-pane-item>
+    </ion-list>
+    <ion-list [inset]="true" mode="ios" lines="none" class="entete" *ngIf="showCheckIn">
+        <ion-list-header>
+            <ion-item style="width: 100%">
+                <ion-badge slot="start" style="margin-right: 0">{{arrivees.length}}</ion-badge>
+                <ion-badge slot="end" color="danger"><img src="{{personBase64}}" style="width:10px;filter: invert(100%);-webkit-filter: invert(100%);"/> {{arriveesPersons}}</ion-badge>
+                <ion-label>En Arrivée (Check-In) :</ion-label>
+            </ion-item>
+        </ion-list-header>
+        <kesy-left-pane-item
+            [data]="arrivees"
+            [Loaded]="loaded"
+            [choixActuel]="choixActuel"
+            [options]="options"
+        ></kesy-left-pane-item>
+    </ion-list>
+    <ion-list [inset]="true" mode="ios" class="entete" *ngIf="showCheckOut">
+        <ion-list-header>
+            <ion-item style="width: 100%">
+                <ion-badge slot="start" style="margin-right: 0">{{departs.length}}</ion-badge>
+                <ion-badge slot="end" color="danger"><img src="{{personBase64}}" style="width:10px;filter: invert(100%);-webkit-filter: invert(100%);"/> {{departsPersons}}</ion-badge>
+                <ion-label>En Départ (Check-Out) :</ion-label>
+            </ion-item>
+        </ion-list-header>
+        <kesy-left-pane-item
+            [data]="departs"
+            [Loaded]="loaded"
+            [options]="options"
+            [choixActuel]="choixActuel"></kesy-left-pane-item>
+    </ion-list>
+</div>
+<!--
+<-->

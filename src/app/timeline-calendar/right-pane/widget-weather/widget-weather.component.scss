@@ -1,0 +1,44 @@
+.widget-left {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+
+    img {
+        width: 35px;
+    }
+
+    p {
+        margin: 0;
+
+        &.small {
+            font-size: 10px;
+        }
+    }
+
+    > div, .weather-left-card {
+        display: flex
+    }
+}
+
+
+.widget-left-menu__layout {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    .small{
+        font-size:10px !important;
+    }
+    >div{
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: flex-start;
+    }
+}

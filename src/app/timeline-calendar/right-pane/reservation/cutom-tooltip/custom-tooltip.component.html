@@ -1,0 +1,45 @@
+<div>
+    <ion-grid class="reservation-tooltip-container">
+        <ion-row style="; width:600px!important;font-size:12px !important;"
+                 [style.background]="curReservation.employer2  ? 'linear-gradient('+getBgColors('couleur',curReservation)+','+curReservation.employer2.couleur+')':getBgColors('couleur',curReservation)"
+                 [style.color]="getBgColors('couleurTexte',curReservation)">
+            <ion-col class="left-tooltip" size="6" style="font-size:12px !important">
+                <div>
+                    <strong>Résa n°: </strong>{{curReservation.id}} du {{curReservation.begin.toLocaleString()}}<br/>
+                    de {{curReservation.beginHour}} à {{curReservation.endHour}}
+                </div>
+                <div><strong>{{options[choixActuel][0].column}}: </strong>#{{curReservation.table.nom}}
+                </div>
+                <div><strong>Nb. personnes : </strong>{{curReservation.nbPerson}}</div>
+                <div>&nbsp;</div>
+                <div *ngIf="choixActuel == 'SPA' || choixActuel == 'Lavage'"><strong>Employer 1 : </strong>{{curReservation.employer1.civilite}} {{curReservation.employer1.prenom}}</div>
+                <div *ngIf="choixActuel == 'SPA' || choixActuel == 'Lavage'"><strong>Employer 2 : </strong>{{curReservation.employer2?curReservation.employer2.civilite:'-'}} {{curReservation.employer2?curReservation.employer2.prenom:''}}</div>
+                <div *ngIf="choixActuel == 'SPA' || choixActuel == 'Lavage'">&nbsp;</div>
+                <div><strong>Observation Résa: </strong>{{curReservation.commentaire}} </div>
+            </ion-col>
+            <ion-col class="right-tooltip" size="6" style="font-size:12px !important">
+                <div class="client-title">
+                    {{curReservation.client.civilite}} {{curReservation.client.nom}} {{curReservation.client.prenom}}
+                    <ion-avatar style="display: inline">
+                        <img [src]="curReservation.client.pays.flagBase64" [alt]="'Drapeau de ' + curReservation.client.pays.name"  style="width: 15px;height: 15px;border: 1px solid lightgray;"/>
+                    </ion-avatar>
+                </div>
+                <div>
+                    <ion-icon name="call"></ion-icon>
+                    {{curReservation.client.tel}} / {{curReservation.client.tel2}}
+                </div>
+                <div>
+                    <ion-icon name="mail"></ion-icon>
+                    {{curReservation.client.email}}
+                </div>
+                <ng-container *ngIf="curReservation.client.categorieClient == 'societe'">
+                    <div><strong>Sté. : </strong>{{curReservation.client.raisonSociale}}</div>
+                    <div><strong>NIF : </strong>{{curReservation.client.nif}}</div>
+                    <div><strong>CIF : </strong>{{curReservation.client.cif}}</div>
+                    <div><strong>Stat : </strong>{{curReservation.client.stat}}</div>
+                </ng-container>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>
+

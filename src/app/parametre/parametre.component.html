@@ -1,0 +1,213 @@
+<kesykely-header></kesykely-header>
+<ion-content [fullscreen]="true">
+    <div style="width:90%; margin:0 auto;min-height: 300px; height:500px; padding:20px">
+        <h1>Modification des paramètres</h1>
+        <ion-grid>
+            <ion-row *ngIf="!saisieEnCours">
+                <ion-col *ngFor="let choixActuel of choix;let idx=index">
+                    <ion-button (click)="saisieType(choixActuel)" size="small" fill="outline"
+                                [color]="colors[idx]">
+                        <ion-icon name="add"></ion-icon>
+                        <ion-label>{{choixActuel}}</ion-label>
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size="8" style="max-height: 600px; overflow-y: auto">
+                    <ng-container *ngIf="!saisieEnCours">
+                        <ion-row *ngFor="let choixActuel of choix;let idx=index">
+                            <ion-col size="3" [innerText]="choixActuel"></ion-col>
+                            <ion-col size="9">
+                                <ion-list>
+                                    <ion-reorder-group (ionItemReorder)="doReorderTables($event,choixActuel)"
+                                                       disabled="false">
+                                        <ion-item *ngFor="let donnees of choixData[choixActuel];let idxType=index">
+                                            <ion-label style="width: 25%">{{donnees.column}}</ion-label>
+                                            <ion-label style="width: 25%">Fixé
+                                                : {{donnees.fixed ? 'Oui' : 'Non'}}</ion-label>
+                                            <ion-label style="width: 25%">Champ de données
+                                                : {{donnees.columnData}}</ion-label>
+                                            <div style="width: 25%">
+                                                <ion-button (click)="modifierType(choixActuel,idxType)" size="small"
+                                                            fill="outline">
+                                                    <ion-icon name="create" slot="icon-only"></ion-icon>
+                                                </ion-button>
+                                                <ion-button (click)="deleteType(choixActuel,donnees)" color="danger"
+                                                            *ngIf="!donnees.fixed"
+                                                            size="small"
+                                                            fill="outline">
+                                                    <ion-icon name="trash" slot="icon-only"></ion-icon>
+                                                </ion-button>
+                                            </div>
+                                            <ion-reorder slot="end"></ion-reorder>
+                                        </ion-item>
+                                    </ion-reorder-group>
+                                </ion-list>
+                            </ion-col>
+                        </ion-row>
+                    </ng-container>
+                    <form [formGroup]="formType" (ngSubmit)="onSubmit()" *ngIf="saisieEnCours">
+                        <ion-item>
+                            <ion-input type="text" label="Libellé de la colonne" formControlName="column"
+                                       label-placement="floating"></ion-input>
+                            <ion-note color="danger" *ngIf="getFormControlError(formType,'column', 'required')">
+                                Libellé de la colonne requis.
+                            </ion-note>
+                        </ion-item>
+                        <ion-item>
+                            <ion-input type="text" label="Champ de la colonne" formControlName="columnData"
+                                       label-placement="floating"></ion-input>
+                            <ion-note color="danger" *ngIf="getFormControlError(formType,'columnData', 'required')">
+                                Champ de la colonne requis.
+                            </ion-note>
+                        </ion-item>
+                        <ion-item>
+                            <ion-toggle formControlName="fixed">Champ fixé ?</ion-toggle>
+                            <ion-note color="danger" *ngIf="getFormControlError(formType,'fixed', 'required')">
+                                Champ fixé requis.
+                            </ion-note>
+                        </ion-item>
+                        <ion-item>
+                            <ion-toolbar>
+                                <ion-buttons slot="end">
+                                    <ion-button fill="outline" type="cancel" (click)="cancelType()">
+                                        Annuler
+                                    </ion-button>
+                                    <ion-button fill="outline" type="submit" [disabled]="formType.invalid"
+                                                (click)="onSubmitType(curSaisieType)">
+                                        Valider
+                                    </ion-button>
+                                </ion-buttons>
+                            </ion-toolbar>
+                        </ion-item>
+                    </form>
+                </ion-col>
+                <ion-col size="4">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()" style="padding:20px; ">
+                        <ion-row>
+                            <ion-col size="4">
+                                <ion-item>
+                                    <ion-select formControlName="rank" label="Rank" (ionChange)="changeRank($event)"
+                                                label-placement="floating">
+                                        <ion-select-option *ngFor="let rank of rankList" [value]="rank.key"
+                                                           [innerHTML]="rank.value"></ion-select-option>
+                                    </ion-select>
+                                    <ion-note color="danger" *ngIf="getFormControlError(form,'rank', 'required')">
+                                        Rank requise.
+                                    </ion-note>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size="8">
+                                <ion-list *ngIf="currentRank=='Hotel'" style="width: 100%">
+                                    <ion-reorder-group (ionItemReorder)="doReorder($event)" disabled="false">
+                                        <ion-item *ngFor="let item of rankHotelData; let idx=index">
+                                            <ion-label>{{idx + 1}} - {{ item.value }}</ion-label>
+                                            <ion-reorder slot="end"></ion-reorder>
+                                        </ion-item>
+                                    </ion-reorder-group>
+                                </ion-list>
+                                <ion-list *ngIf="currentRank=='Restaurant'">
+                                    <ion-reorder-group (ionItemReorder)="doReorder($event)" disabled="false">
+                                        <ion-item *ngFor="let item of rankRestaurantData; let idx=index">
+                                            <ion-label>{{idx + 1}} - {{ item.value }}</ion-label>
+                                            <ion-reorder slot="end"></ion-reorder>
+                                        </ion-item>
+                                    </ion-reorder-group>
+                                </ion-list>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <ion-item>
+                                    <ion-input type="text" label="Champ du rapport" formControlName="reportColumn"
+                                               label-placement="floating"></ion-input>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <ion-item>
+                                    <ion-input type="time" formControlName="beginHour" label="Heure d'ouverture"
+                                               label-placement="floating"></ion-input>
+                                    <ion-note color="danger" *ngIf="getFormControlError(form,'beginHour', 'required')">
+                                        Heure d'ouverture requise.
+                                    </ion-note>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <ion-item>
+                                    <ion-input type="time" formControlName="endHour" label="Heure de fermeture"
+                                               label-placement="floating"></ion-input>
+                                    <ion-note color="danger" *ngIf="getFormControlError(form,'endHour', 'required')">
+                                        Heure de fermeture requise.
+                                    </ion-note>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <ion-item>
+                                    <ion-input type="number" formControlName="step" label="Pas du timeline (min)"
+                                               label-placement="floating"></ion-input>
+                                    <ion-note color="danger" *ngIf="getFormControlError(form,'step', 'required')">
+                                        Pas du timeline requis.
+                                    </ion-note>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <ion-item>
+                                    <ion-input type="number" formControlName="leftColumnWidth"
+                                               label="Largeur d'une colonne de libellé du calendrier (px)"
+                                               label-placement="floating"></ion-input>
+                                    <ion-note color="danger"
+                                              *ngIf="getFormControlError(form,'leftColumnWidth', 'required')">
+                                        Largeur d'une colonne de libellé du calendrier (px) requis.
+                                    </ion-note>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <ion-item>
+                                    <ion-input type="number" formControlName="columnWidth"
+                                               label="Largeur d'une colonne du calendrier (px)"
+                                               label-placement="floating"></ion-input>
+                                    <ion-note color="danger"
+                                              *ngIf="getFormControlError(form,'columnWidth', 'required')">
+                                        Largeur d'une colonne du calendrier (px) requis.
+                                    </ion-note>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <ion-item>
+                                    <ion-input type="number" formControlName="columnHeight"
+                                               label="Hauteur d'une ligne (px)"
+                                               label-placement="floating"></ion-input>
+                                    <ion-note color="danger"
+                                              *ngIf="getFormControlError(form,'columnHeight', 'required')">
+                                        Hauteur d'une ligne requise.
+                                    </ion-note>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                    </form>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" [disabled]="form.invalid" (click)="onSubmit()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

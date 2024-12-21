@@ -1,0 +1,27 @@
+ion-item {
+    &.top-menu {
+        ion-button {
+            margin-top: 0 !important;
+            margin-left: 5px !important;
+
+            &::part(native) {
+                padding: 5px !important;
+            }
+
+            ion-col {
+                ion-row {
+                    font-size: 10px !important;
+                }
+            }
+        }
+
+        &::part(native) {
+            background: transparent;
+            padding-left: 0 !important;
+
+            >.item-inner {
+                padding-right: 0 !important;
+            }
+        }
+    }
+}

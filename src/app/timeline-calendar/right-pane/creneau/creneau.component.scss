@@ -1,0 +1,58 @@
+.hour {
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex: 0 0 5%;
+  vertical-align: middle;
+  box-sizing: border-box;
+  font-weight: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.1215686275);
+  text-align: center;
+
+  :first-of-type {
+    border-left: none;
+  }
+}
+.context-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.context-menu li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.context-menu li:hover {
+  background-color: #ddd;
+}
+
+.context-area {
+  width: 300px;
+  height: 200px;
+  background-color: lightgray;
+  text-align: center;
+  line-height: 200px;
+  border: 1px solid black;
+  margin-top: 50px;
+}
+.cdk-overlay-backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}
+.cal-event-container{
+  div{
+    display: inline-block;
+  }
+}

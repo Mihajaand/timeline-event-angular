@@ -1,0 +1,13 @@
+<div
+    class="evenement-affichage"
+    [style.height]="options.columnHeight"
+    [style.width]="calculateWidth(evenement.debut, evenement.fin) + 'px'"
+    [style.left]="0"
+>
+    <div class="text-event-container">
+        <div class="call-event" [style.background-color]="evenement.couleur">
+            <div class="call-event-title" [style.color]="evenement.couleurTexte" [innerHTML]="evenement.nom">
+            </div>
+        </div>
+    </div>
+</div>

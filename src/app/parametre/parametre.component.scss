@@ -1,0 +1,40 @@
+table {
+    border: 1px solid lightgray;
+    width: 100%;
+
+    thead {
+        display: flex;
+    }
+
+    th, td {
+        border-right: 1px solid lightgray;
+        border-top: 1px solid lightgray;
+        border-bottom: 1px solid lightgray;
+        width: calc(100% / 6);
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+ion-row {
+    border-bottom: 1px solid lightgray;
+}
+ion-row:last-of-type {
+    border-bottom: none !important;
+}
+ion-col[cdkDrag] {
+    cursor: move;
+}
+
+.cdk-drag-preview {
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px dashed red;
+}
+
+.cdk-drag-placeholder {
+    opacity: 1;
+    border-color:red;
+    height:50px;
+    background-color:red;
+}
+

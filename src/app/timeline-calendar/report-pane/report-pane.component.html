@@ -1,0 +1,129 @@
+<div class="report-pane" [contextMenu]="repotContextMenu">
+    <div class="mwl-calendar-week-view-header" style="background-color: #a0caff;height:18px">
+        <div class="cal-time-label-column min-20"
+             style="height:100%;min-width: 100px;font-weight: bolder;border-bottom: 1px solid #e1e1e1;text-align: center"
+             [style.width]="leftColumnWidth+'px'"
+             [style.min-width]="leftColumnWidth+'px'">
+            <strong
+                [style.width]="leftColumnWidth+'px'"
+                [innerText]="(showDisponible ? 'DISPONIBILITE':'OCCUPATION')+(showTotalsAsNumber ?'':' (%)')"
+                class="ellipsis">
+            </strong>
+        </div>
+        <div class="cal-day-headers scrollable-horizontal  display-inline" #hourLines style="overflow: hidden">
+            <div class="cal-header cal-past  display-reports" *ngFor="let hour of allHours;"
+                 [style.width]="columnWidth+'px'" style="height: 100%">
+                <ion-badge
+                    style="font-size:10px !important;">
+                    {{showDisponible ? (showTotalsAsNumber ? totals[hour]?.nbTablesDispo : totals[hour]?.percTablesDispo + '%') : (showTotalsAsNumber ? totals[hour]?.nbTablesOcc : totals[hour]?.percTablesOcc + '%')}}
+                </ion-badge>
+                <ion-badge color="secondary" style="font-size:10px !important;">
+                    <img [src]="personBase64" style="width: 10px"/>
+                    {{showDisponible ? (showTotalsAsNumber ? totals[hour]?.nbPersDispo : totals[hour]?.percPersDispo + '%') : (showTotalsAsNumber ? totals[hour]?.nbPersOcc : totals[hour]?.percPersOcc + '%')}}
+                </ion-badge>
+            </div>
+        </div>
+    </div>
+    <div class="mwl-calendar-week-view-header" [style.height]="choixActuel == 'SPA'? options.columnHeight+'px':'18px'" [attr.data-choix]="choixActuel"
+         *ngFor="let key of keys">
+        <div class="cal-time-label-column min-20 display-reports"
+             style="height:100%;min-width: 100px;font-weight: bolder;border-bottom: 1px solid #e1e1e1;"
+             [style.width]="leftColumnWidth+'px'"
+             [style.min-width]="leftColumnWidth+'px'">
+            <div [style.width]="oneLeftColumnWidth+'px'">
+                <div *ngIf="options.reportColumn == 'type'" class="display-reports"
+                     style="height:100%;font-size: 10px;display: inline-block;width: 75px;display:flex; flex-direction: row">
+                    <div [class]="key" style="text-align: center">
+                        {{data.nbTables[key]}}
+                    </div>
+                    <div class="" style="font-size: 10px !important">
+                        <img [src]="personBase64" style="width: 10px"/>
+                        {{data.nbPers[key]}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cal-day-headers scrollable-horizontal  display-inline reportHourLines" #reportHourLines
+             style="overflow: hidden">
+            <div class="cal-header cal-past  display-reports" *ngFor="let hour of allHours;"
+                 [style.width]="columnWidth+'px'" style="height: 100%;vertical-align: middle;">
+                <ion-badge
+                    style="font-size:10px !important;">
+                    {{ showDisponible ? (showTotalsAsNumber ? data[key]?.data[hour]?.nbTablesDispo : data[key]?.data[hour]?.percTablesDispo + '%') : (showTotalsAsNumber ? data[key]?.data[hour]?.nbTablesOcc : data[key]?.data[hour]?.percTablesOcc + '%') }}
+
+                </ion-badge>
+                <ion-badge color="secondary" style="font-size:10px !important;">
+                    <img [src]="personBase64" style="width: 10px"/>
+                    {{showDisponible ? (showTotalsAsNumber ? data[key]?.data[hour]?.nbPersDispo : data[key].data[hour]?.percPersDispo + '%') : (showTotalsAsNumber ? data[key].data[hour]?.nbPersOcc : data[key]?.data[hour]?.percPersOcc + '%')}}
+                </ion-badge>
+            </div>
+        </div>
+    </div>
+
+    <div class="mwl-calendar-week-view-header" style="background-color: #a0caff;height:18px">
+        <div class="cal-time-label-column min-20"
+             style="height:100%;min-width: 100px;font-weight: bolder;border-bottom: 1px solid #e1e1e1;text-align: center"
+             [style.width]="leftColumnWidth+'px'"
+             [style.min-width]="leftColumnWidth+'px'">
+            <strong
+                [style.width]="leftColumnWidth+'px'" [innerText]="'STOCK'" class="ellipsis">
+            </strong>
+        </div>
+        <div class="cal-day-headers scrollable-horizontal  display-inline" #stockHourLines style="overflow: hidden">
+            <div class="cal-header cal-past  display-inline" *ngFor="let hour of allHours; let htIndex=index"
+                 [style.width]="columnWidth+'px'" style="height: 100%">
+                <strong>{{showTotalsAsNumber ? '0' : '100%'}}</strong>
+            </div>
+        </div>
+    </div>
+    <div class="mwl-calendar-week-view-header" *ngFor="let stock of stocks" style="height:18px">
+        <div class="cal-time-label-column min-20"
+             style="height:100%;min-width: 100px;font-weight: bolder;border-bottom: 1px solid #e1e1e1;"
+             [style.width]="leftColumnWidth+'px'"
+             [style.min-width]="leftColumnWidth+'px'">
+            <div [style.width]="leftColumnWidth+'px'" [innerText]="stock.name">
+            </div>
+        </div>
+        <div class="cal-day-headers scrollable-horizontal  display-inline" #reportStockLines style="overflow: hidden">
+            <div class="cal-header cal-past  display-inline" *ngFor="let hour of allHours"
+                 [style.width]="columnWidth+'px'" style="height: 100%" [style.background-color]="">
+                <div
+                    [innerText]="0"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<context-menu #repotContextMenu>
+    <ng-template contextMenuItem (execute)="showTotalsAsNumber = false">
+        <ion-item [button]="true">
+            <ion-icon [icon]="!showTotalsAsNumber ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="!showTotalsAsNumber ? 'success':'#CCC'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="!showTotalsAsNumber ? 'black':'gray'">Pourcentage</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="showTotalsAsNumber = true">
+        <ion-item [button]="true">
+            <ion-icon [icon]="showTotalsAsNumber ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="showTotalsAsNumber ? 'success':'#CCC'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="showTotalsAsNumber ? 'black':'gray'">Unite</ion-label>
+        </ion-item>
+    </ng-template>
+    <hr style="width:100%"/>
+    <ng-template contextMenuItem [divider]="true"></ng-template>
+    <ng-template contextMenuItem (execute)="showDisponible = false">
+        <ion-item [button]="true">
+            <ion-icon [icon]="!showDisponible ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="!showDisponible ? 'success':'#CCC'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="!showDisponible ? 'black':'gray'">Occupé</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="showDisponible = true" style="border:none">
+        <ion-item [button]="true">
+            <ion-icon [icon]="showDisponible ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="showDisponible ? 'success':'#CCC'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="showDisponible ? 'black':'gray'">Disponible</ion-label>
+        </ion-item>
+    </ng-template>
+</context-menu>

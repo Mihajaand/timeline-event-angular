@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+    <ion-toolbar mode="ios">
+        <ion-buttons slot="start" *ngIf="showBackBtn">
+            <ion-back-button small-href="/" text="Précédent"></ion-back-button>
+        </ion-buttons>
+        <ion-buttons slot="start">
+        <ion-item class="top-menu">
+            <ion-button slot="start" size="small" color="dark" fill="outline" href="/">
+                <ion-col>
+                    <ion-row style="display: block">
+                        <ion-icon name="home" size="medium" mode="ios"></ion-icon>
+                    </ion-row>
+                    <ion-row>ACCUEIL</ion-row>
+                </ion-col>
+            </ion-button>
+        </ion-item>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-item class="top-menu">
+                <ion-button slot="end" size="small" color="success" fill="outline" href="/planning">
+                    <ion-col>
+                        <ion-row style="display: block">
+                            <ion-icon name="calendar" size="medium" mode="ios"></ion-icon>
+                        </ion-row>
+                        <ion-row>PLANNING</ion-row>
+                    </ion-col>
+                </ion-button>
+                <ion-button slot="end" size="small" fill="outline">
+                    <ion-col>
+                        <ion-row style="display: block">
+                            <ion-icon name="calendar" size="medium" mode="ios"></ion-icon>
+                        </ion-row>
+                        <ion-row>NOTES EN COURS</ion-row>
+                    </ion-col>
+                </ion-button>
+                <ion-button slot="end" size="small" fill="outline" color="danger">
+                    <ion-col>
+                        <ion-row style="display: block">
+                            <ion-icon name="calendar" size="medium" mode="ios"></ion-icon>
+                        </ion-row>
+                        <ion-row>FACTURES EN COURS</ion-row>
+                    </ion-col>
+                </ion-button>
+                <ion-button slot="end" size="small" color="medium" fill="outline" href="/conteneurs">
+                    <ion-col>
+                        <ion-row style="display: block">
+                            <ion-icon name="apps" size="medium" mode="ios"></ion-icon>
+                        </ion-row>
+                        <ion-row>Conteneurs</ion-row>
+                    </ion-col>
+                </ion-button>
+                <ion-button slot="end" size="small" fill="outline" href="/clients">
+                    <ion-col>
+                        <ion-row style="display: block">
+                            <ion-icon name="people" size="medium" mode="ios"></ion-icon>
+                        </ion-row>
+                        <ion-row>CLIENTS</ion-row>
+                    </ion-col>
+                </ion-button>
+                <ion-button slot="end" size="small" fill="outline" color="secondary"
+                            class="ion-text-center align-items-center"
+                            title="I'm a tooltip below a button"
+                            (click)="openConfigMenu($event)">
+                    <ion-col>
+                        <ion-row style="display: block">
+                            <ion-icon name="settings" size="medium" mode="ios"></ion-icon>
+                        </ion-row>
+                        <ion-row>CONFIG.</ion-row>
+                    </ion-col>
+                </ion-button>
+            </ion-item>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>

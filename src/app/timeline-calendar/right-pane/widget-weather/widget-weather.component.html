@@ -1,0 +1,27 @@
+<div class="widget-left widget-left--compact" *ngIf="result">
+    <div class="widget-left-menu widget-left-menu--compact">
+        <div class="widget-left-menu__layout">
+            <strong class="widget-left-menu__header"
+                    style="margin: 0; font-size:12px !important">Tanambao</strong>
+            <div>
+                <div class="small">{{result.weather[0].description}}</div>
+                <div class="small">Vent: {{result.wind.speed}} m/s &nbsp;</div>
+            </div>
+        </div>
+    </div>
+    <div class="widget-left__body widget-left__body--compact">
+        <div class="weather-left-card weather-left-card--compact weather-left-card--grayscale">
+            <div><img src="{{result.icon}}" alt="Weather in {{result.name}}, {{result.sys.country}}"
+                      class="weather-left-card__img"></div>
+            <div class="weather-left-card__row1">
+                <div class="weather-left-card__col">
+                    <p class="small">
+                        {{result.main.temp}}
+                        <span class="weather-left-card__degree">°C</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ion-skeleton-text animated="true" style="width: 80%;" *ngIf="!result"></ion-skeleton-text>

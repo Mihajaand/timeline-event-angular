@@ -1,0 +1,108 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title [innerText]="table.id > 0 ?'Modifier un form':'Ajouter un form'"></ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content style="min-height: 300px;width:1024px">
+    <form [formGroup]="tableForm" (ngSubmit)="onSubmit()" style="padding:20px">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="conteneur" label="Conteneur" (ionChange)="changeChoix($event)"
+                                    label-placement="floating">
+                            <ion-select-option *ngFor="let type of choix" [value]="type"
+                                               [innerHTML]="type"></ion-select-option>
+                        </ion-select>
+                        <ion-note color="danger" *ngIf="getFormControlError('conteneur', 'required')">
+                            Conteneur requis.
+                        </ion-note>
+                    </ion-item>
+                    <ion-item>
+                        <ion-select formControlName="type" [label]="'Type de '+options[choixActuel][0].column" (ionChange)="changeType($event)"
+                                    label-placement="floating">
+                            <ion-select-option *ngFor="let type of types" [value]="type.value"
+                                               [innerHTML]="type.label"></ion-select-option>
+                        </ion-select>
+                        <ion-note color="danger" *ngIf="getFormControlError('type', 'required')">
+                            Type de {{options[choixActuel][0].column}} requis.
+                        </ion-note>
+                    </ion-item>
+                    <ion-item>
+                        <ion-select formControlName="forme" label="Forme"
+                                    label-placement="floating">
+                            <ion-select-option *ngFor="let forme of formes" [value]="forme.value"
+                                               [innerHTML]="forme.label"></ion-select-option>
+                        </ion-select>
+                        <ion-note color="danger" *ngIf="getFormControlError('forme', 'required')">
+                            Forme de {{options[choixActuel][0].column}} requise.
+                        </ion-note>
+                    </ion-item>
+                    <ion-row>
+                        <ion-col size="4">
+                            <ion-item>
+                                <ion-input type="text" formControlName="nom" label="Nom"
+                                           label-placement="floating"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('nom', 'required')">
+                                    Nom requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="4">
+                            <ion-item>
+                                <ion-input type="number" formControlName="nbPlace" label="Nb. de places"
+                                           label-placement="floating" min="1"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('nbPlace', 'required')">
+                                    Nb. de places requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="4">
+                            <ion-item>
+                                <ion-input type="text" formControlName="emplacement" label="Emplacement"
+                                           label-placement="floating"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('emplacement', 'required')">
+                                    Emplacement requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <ion-item>
+                                <ion-input type="color" formControlName="couleur" label="Couleur de fond"
+                                           label-placement="floating"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('couleur', 'required')">
+                                    Couleur de fond requis.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col>
+                            <ion-item>
+                                <ion-input type="color" formControlName="couleurTexte" label="Couleur du texte"
+                                           label-placement="floating"></ion-input>
+                                <ion-note color="danger" *ngIf="getFormControlError('couleurTexte', 'required')">
+                                    Couleur du texte requise.
+                                </ion-note>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" [disabled]="tableForm.invalid" (click)="onSubmit()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

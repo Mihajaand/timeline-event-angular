@@ -1,0 +1,17 @@
+ion-col {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+h2 {
+    text-align: center;
+}
+ion-button {
+    font-size: 1.2em;
+}
+ion-item{
+    --inner-padding-end:10px;
+    --inner-padding-start:10px;
+    --padding-end:0;
+    --padding-start:0;
+}

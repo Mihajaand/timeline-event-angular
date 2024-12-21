@@ -1,0 +1,410 @@
+<div class="right-pane">
+    <ion-grid>
+        <ion-row class="border-0">
+            <ion-col size="2" class="align-items-center">
+                <ion-item [style.width]="leftColumnWidth+'px'" [style.max-width]="100+'%'">
+                    <ion-select label="Choix" label-placement="floating" [(ngModel)]="choixActuel"
+                                (ionChange)="changerChoix($event)" #mySelect class="ion-hide">
+                        <ion-select-option *ngFor="let choi of choix; let idx = index" [value]="choi.key"
+                                           [innerHTML]="(idx+1) + ' - '+choi.value"></ion-select-option>
+                    </ion-select>
+                    <ion-button fill="outline" color="dark" (click)="decDate()" size="small">
+                        <ion-icon slot="icon-only" name="caret-back-outline"></ion-icon>
+                    </ion-button>
+                    <div class="ion-activatable ripple-parent custom-parent">
+                        <ion-button fill="outline" id="open_cal" color="secondary" size="medium">
+                            <ion-icon icon="calendar-outline" slot="icon-only" size="large"></ion-icon>
+                        </ion-button>
+                        <ion-ripple-effect></ion-ripple-effect>
+                    </div>
+                    <ion-button fill="outline" color="dark" (click)="incDate()" size="small">
+                        <ion-icon slot="icon-only" name="caret-forward-outline"></ion-icon>
+                    </ion-button>
+                    <ion-modal class="datepicker"
+                               trigger="open_cal"
+                               [keepContentsMounted]="false"
+                               [initialBreakpoint]="0.65"
+                    >
+                        <ng-template>
+                            <ion-datetime
+                                presentation="date"
+                                mode="md"
+                                locale="fr-FR"
+                                [value]="this.curDate.toISOString().split('T')[0]"
+                                [firstDayOfWeek]="1"
+                                (ionChange)="datePick($event)"
+                                [showDefaultButtons]="true"
+                                doneText="Valider"
+                                cancelText="Annuler"
+                            ></ion-datetime>
+                        </ng-template>
+                    </ion-modal>
+                </ion-item>
+            </ion-col>
+            <ion-col *ngIf="choixActuel=='SPA' || choixActuel=='Lavage'" size="3" class="employers-spa">
+                <div
+                    style="display: flex;flex-direction: row;flex-wrap: wrap;align-content: center;">
+                    <ion-item *ngFor="let employer of employersSPA"
+                              style="width: 30%; --background:{{employer.couleur}}; height:20px">
+                        <ion-icon slot="end" [color]="employer.actif == 1 ?'success':'danger'"
+                                  [name]="employer.actif == 1 ?'checkmark-circle':'close-circle'">&nbsp;
+                        </ion-icon>
+                        <ion-label style="text-align:left; margin: 0!important;" [style.color]="employer.couleurTexte">
+                            {{employer.civilite}} {{employer.prenom}}
+                        </ion-label>
+                    </ion-item>
+                </div>
+            </ion-col>
+            <ion-col align="center" [size]="((choixActuel=='SPA' || choixActuel=='Lavage')? 0:3)+currencies.length"
+                     class="border-0"
+                     style="display: flex">
+                <div style="
+                    display: flex;
+                    flex-wrap: nowrap;
+                    align-content: center;
+                    flex-direction: row;
+                    justify-content: space-evenly;
+                    align-items: center;
+                    border: 2px solid lightgray;
+                    border-radius: 15px;
+                    width: 100%;
+                    background-color: #d3d3d336;
+                ">
+                    <div *ngFor="let currency of currencies">
+                        <div>
+                            <img [src]="currency.flag" style="width:20px;"/>&nbsp;<strong>{{currency.curencyCode}}
+                            : </strong>{{currency.amount| currency:'MGA':'symbol':'1.2-2'}}
+                        </div>
+                    </div>
+                    <app-widget-weather></app-widget-weather>
+                </div>
+            </ion-col>
+            <ion-col size="2" class="align-items-center">
+                <ion-item style="font-weight: bold; text-align: right; text-transform: capitalize">
+                    <ion-label>
+                        <div style="font-size:10px !important">{{ sysDate | date: 'EEEE dd MMMM Y' }}</div>
+                        <div style="font-size:14px !important">{{ sysDate | date: 'HH:mm:ss' }}</div>
+                    </ion-label>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <div role="grid" class="cal-week-view" #calendar>
+        <div class="mwl-calendar-week-view-header" *ngIf="showAnnee">
+            <div class="cal-time-label-column min-20"
+                 style="border:none"
+                 [style.height]="'20px'" [style.width]="leftColumnWidth+'px'"
+                 [style.min-width]="leftColumnWidth+'px'">
+                <ion-button (click)="openSelect()" [innerText]="choixActuel" style="margin: 0" class="modSelector"
+                            expand="block"
+                            [attr.data-index]="choixIndex"
+                            size="medium"
+                            [color]="colors[choixIndex]"
+                            [class]="colors[choixIndex]+'-btn'"
+                ></ion-button>
+            </div>
+            <div style="width: 100%" class="ion-text-center" [contextMenu]="hourContextMenu">
+                <div
+                    style="height:100%;width:100%; border:1px solid lightgray;display:block;text-transform: capitalize">{{ curDate|date:'MMMM y':'fr-FR' }}
+                </div>
+            </div>
+        </div>
+        <div class="mwl-calendar-week-view-header" *ngIf="showMois">
+            <div class="cal-time-label-column min-20"
+                 style="border:none"
+                 [style.height]="'20px'" [style.width]="leftColumnWidth+'px'"
+                 [style.min-width]="leftColumnWidth+'px'"></div>
+            <div style="width: 100%" class="ion-text-center" [contextMenu]="hourContextMenu">
+                <div
+                    style="height:100%;width:100%; border:1px solid lightgray;display:block; text-transform: capitalize">{{ curDate|date:'EEEE dd MMMM Y':'fr-FR' }}
+                </div>
+            </div>
+        </div>
+        <div class="cal-time-events min-20" [style.height]="'20px'" *ngIf="showEvenements">
+            <div class="cal-time-label-column min-20"
+                 style="border:none; text-align: center"
+                 [style.height]="'20px' + '!important' " [style.width]="leftColumnWidth+'px'"
+                 [style.min-width]="leftColumnWidth+'px'">Evenements
+            </div>
+            <div class="cal-day-columns scrollable-horizontal min-20" #reservation1Line
+                 style="max-width: 100%;    width: 100%; overflow:hidden">
+                <div class="cal-day-column" *ngFor="let hour of hours; let i = index"
+                     (dblclick)="ouvrirModalEvenement()"
+                     [contextMenu]="hourContextMenu"
+                     [style.flex]="'0 0 '+columnWidth+'px'"
+                     style="text-align: center;">
+                    <div class="cal-events-container"
+                    >
+                        <ng-container *ngFor="let hourEvent of hourEvents | keyvalue">
+                            <afficher-event *ngIf="hourEvent.value.hour == hour"
+                                            [hours]="hours"
+                                            [options]="options"
+                                            [timelineWidth]="options.columnWidth"
+                                            [evenement]="hourEvent.value.event"
+                            ></afficher-event>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div><!-- evenements-->
+        <div class="mwl-calendar-week-view-header">
+            <div class="cal-time-label-column min-20"
+                 style="font-weight: bolder;border-bottom: 1px solid #e1e1e1;background:#a0caff;color:white"
+                 [style.height]="'20px'" [style.width]="leftColumnWidth+'px'" [style.min-width]="leftColumnWidth+'px'">
+                <ng-container
+                    *ngFor="let column of options[choixActuel];let idx=index">
+                    <div [style.display]="columnsShowing[choixActuel][idx]?'inline-block':'none !important'"
+                         style="border-left: 1px solid lightgray;padding: 2px !important; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
+                         [style.width]="oneLeftColumnWidth+'px'"
+                         class="ion-text-center align-middle display-inline sortable"
+                         (click)="sortTables(column.column)">
+                        {{column.column}}
+                        <ion-icon [name]="sortDirection == 'ASC'?'arrow-up':'arrow-down'"
+                                  *ngIf="sortColumn == column.column"></ion-icon>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="cal-day-headers scrollable-horizontal  display-inline" #hourLines style="overflow: hidden"
+            >
+                <div class="cal-header cal-past  display-inline" *ngFor="let hour of hours; let iHour=index"
+                     [style.width]="columnWidth+'px'" style="height: 100%;"
+                     [contextMenu]="hourContextMenu"
+                     [contextMenuValue]="{hour}"
+                     [class]="colors[choixIndex]">
+            <span cdkDragLockAxis="x"
+                  mwlResizeHandle
+                  #resizeColumn
+                  class="hourResize"
+                  cdkDrag
+                  style="transform: none !important;border-left:1px solid blue; height:100%"
+                  [style.background-color]="'none'"
+                  (cdkDragEnded)="resize( $event)"></span>
+                    <div
+                        style="width:98%; height:100% ;background-color:#358994; color:white;position: relative;top: -3px;padding-top: 6px;">{{ hour }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cal-time-events">
+            <div class="cal-time-label-column" [style.min-width]="leftColumnWidth+'px'"
+                 [style.width]="leftColumnWidth+'px'">
+                <div class="cal-hour" *ngFor="let table of tables; let t =index">
+                    <div class="mwl-calendar-week-view-hour-segment" [style.height]="options.columnHeight+'px'"
+                         [contextMenu]="leftContextMenu">
+                        <div class="cal-hour-segment cal-hour-start" tabindex="0" aria-expanded="false"
+                             [style.height]="options.columnHeight+'px'">
+                            <div class="cal-time" [style.height]="options.columnHeight+'px'"
+                                 style="background-color:#eee;border-bottom: 1px solid lightgray;"
+                                 [style.width]="leftColumnWidth+'px'">
+                                <div style="display: flex;align-items: center;"
+                                     [style.height]="options.columnHeight+'px'"
+                                     [style.width]="leftColumnWidth+'px'">
+                                    <ng-container
+                                        *ngFor="let column of options[choixActuel]; let idxz = index">
+                                        <div [style.display]="columnsShowing[choixActuel][idxz]?'inline-block':'none'"
+                                             style="border-left: 1px solid lightgray; height:100%; font-size:10px;align-content: center; "
+                                             [style.width]="oneLeftColumnWidth+'px'" [class]="column.columnData"
+                                        >
+                                            <div *ngIf="column.columnData == 'type' && table[column.columnData] =='B'"
+                                                 class="{{table[column.columnData]}}" style="    background-position: 50%;padding-top:8px">
+                                                {{table['nbPlace']}}
+                                            </div>
+                                            <div *ngIf="column.columnData == 'type' && table[column.columnData] !='B'"
+                                                 class="{{table[column.columnData]}}">
+                                                <img src="{{personBase64}}" style="width:10px"/>
+                                                {{table['nbPlace']}}
+                                            </div>
+                                            <div *ngIf="column.columnData != 'type'"
+                                                 style="font-size:10px !important;align-content: center;">{{table[column.columnData]}}</div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cal-day-columns scrollable-horizontal" (scroll)="onScrollTimeline($event)"
+                 #timelineDataContainer
+                 style="max-width: 100%;    width: 100%;">
+                <div class="cal-day-column" *ngFor="let hour of hours; let i = index"
+                     [style.flex]="'0 0 '+columnWidth+'px'"
+                     style="text-align: center;">
+                    <div class="mwl-calendar-week-view-current-time-marker"></div>
+                    <div class="cal-events-container">
+                        <ng-container *ngFor="let reservation of fileteredReservations; let e=index">
+                            <kesy-timeline-calendar-reservation *ngIf="reservation.beginHour === hour"
+                                                                [attr.data-hour]="hour"
+                                                                [tables]="tables"
+                                                                [clients]="clients"
+                                                                [beginHour]="options.beginHour"
+                                                                [choix]="choixActuel"
+                                                                [personBase64]="personBase64"
+                                                                [step]="options.step"
+                                                                [timelineHeight]="options.columnHeight"
+                                                                [reservationBgColors]="reservationBgColors"
+                                                                [curReservation]="reservation"
+                                                                [width]="options.columnWidth"
+                                                                [options]="options"
+                                                                [employersSPA]="employersSPA"
+                                                                dragactiveclass="cal-drag-active" cdkDropList
+                                                                (cdkDropListDropped)="drop($event)"
+                                                                [cdkDropListData]="reservation"
+                                                                (reservationUpdated)="updateReservation($event)"
+                                                                (reservationCreated)="createReservation($event)"
+                                                                (reservationDeleted)="deleteReservation($event)"
+
+                            ></kesy-timeline-calendar-reservation>
+                        </ng-container>
+                    </div>
+
+                    <div class="cal-hour" *ngFor="let table of tables"
+                         [style.height]="options.columnHeight+'px'"
+                         [contextMenu]="rightClickAddMenu"
+                         [contextMenuValue]="{hour, table}"
+                         (dblclick)="addEvent(hour, table)"
+                         [class]="table['type']+'Color'"
+                         [attr.data-table-id]="table.id" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1215686275)">
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <kesy-calendar-report-pane
+            [columnWidth]="columnWidth"
+            [leftColumnWidth]="leftColumnWidth"
+            [hours]="hours"
+            [options]="options"
+            [reportTables]="reportTables"
+            [all_tables]="tables"
+            [scrollLeft]="scrollLeft"
+            [allReservations]="all_reservations"
+            [personBase64]="personBase64"
+            [stocks]="stocks"
+            [choixActuel]="choixActuel"
+            [oneLeftColumnWidth]="oneLeftColumnWidth"
+            [allEvenements]="allEvents"
+            [loading]="loaded"
+        ></kesy-calendar-report-pane>
+    </div>
+</div>
+
+<context-menu #rightClickAddMenu>
+    <ng-template *ngIf="showContextMenu" contextMenuItem (execute)="addEvent($event.value.hour, $event.value.table)">
+        <ion-item [button]="true">
+            <ion-icon icon="add-circle-outline" slot="start" color="primary"></ion-icon>
+            <ion-label color="primary">Ajouter une réservation</ion-label>
+        </ion-item>
+    </ng-template>
+</context-menu>
+<context-menu #hourContextMenu>
+    <ng-template contextMenuItem (execute)="showMois = !showMois">
+        <ion-item [button]="true">
+            <ion-icon [icon]="showMois ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="showMois ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="showMois ? 'black':'gray'">Mois</ion-label>
+        </ion-item>
+    </ng-template>
+    <!-- <ng-template contextMenuItem (execute)="showSemaine = !showSemaine">
+         <ion-item [button]="true">
+             <ion-icon [icon]="showSemaine ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                       [color]="showSemaine ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+             <ion-label [color]="showSemaine ? 'black':'gray'">Semaine</ion-label>
+         </ion-item>
+     </ng-template>
+     <ng-template contextMenuItem (execute)="showJour = !showJour">
+         <ion-item [button]="true">
+             <ion-icon [icon]="showJour ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                       [color]="showJour ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+             <ion-label [color]="showJour ? 'black':'gray'">Jour</ion-label>
+         </ion-item>
+     </ng-template>
+     <ng-template contextMenuItem (execute)="showMois = !showMois">
+         <ion-item [button]="true">
+             <ion-icon [icon]="showMois ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                       [color]="showMois ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+             <ion-label [color]="showMois ? 'black':'gray'">Période</ion-label>
+         </ion-item>
+     </ng-template>-->
+    <ng-template contextMenuItem (execute)="showEvenements = !showEvenements">
+        <ion-item [button]="true">
+            <ion-icon [icon]="showEvenements ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="showEvenements ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="showEvenements ? 'black':'gray'">Evènements</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem [divider]="true" *ngIf="choixActuel !='Restaurant'"></ng-template>
+    <ng-template contextMenuItem (execute)="vue = 'jour'" *ngIf="choixActuel !='Restaurant'">
+        <ion-item [button]="true">
+            <ion-icon [icon]="vue == 'jour' ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="vue == 'jour' ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="vue == 'jour' ? 'black':'gray'">Vue Journée</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="vue = 'semaine'" *ngIf="choixActuel !='Restaurant'">
+        <ion-item [button]="true">
+            <ion-icon [icon]="vue == 'semaine' ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="vue == 'semaine' ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="vue == 'semaine' ? 'success':'gray'">Vue Hebdomadaire</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="vue = 'mois'" *ngIf="choixActuel !='Restaurant'">
+        <ion-item [button]="true">
+            <ion-icon [icon]="vue == 'mois' ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="vue == 'mois' ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="vue == 'mois' ? 'success':'gray'">Vue Mensuelle</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="vue = 'trimestre'" *ngIf="choixActuel !='Restaurant'">
+        <ion-item [button]="true">
+            <ion-icon [icon]="vue == 'trimestre' ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="vue == 'trimestre' ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="vue == 'trimestre' ? 'success':'gray'">Vue Trimestrielle</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="vue = 'semestre'" *ngIf="choixActuel !='Restaurant'">
+        <ion-item [button]="true">
+            <ion-icon [icon]="vue == 'semestre' ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="vue == 'semestre' ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="vue == 'semestre' ? 'success':'gray'">Vue Semestrielle</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="vue = 'annuel'" *ngIf="choixActuel !='Restaurant'">
+        <ion-item [button]="true">
+            <ion-icon [icon]="vue == 'annuel' ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="vue == 'annuel' ? 'success':'gray'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="vue == 'annuel' ? 'success':'gray'">Vue Annuelle</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem [divider]="true"></ng-template>
+    <ng-template contextMenuItem (execute)="ouvrirModalEvenement()">
+        <ion-item [button]="true">
+            <ion-icon icon="color-wand" mode="ios" slot="start" color="primary" style="margin-right:5px"></ion-icon>
+            <ion-label color="primary">Affichage personalisée</ion-label>
+        </ion-item>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="ouvrirModalEvenement()">
+        <ion-item [button]="true">
+            <ion-icon icon="add-circle-outline" slot="start" color="primary" style="margin-right:5px"></ion-icon>
+            <ion-label color="primary">Gérer les évènements</ion-label>
+        </ion-item>
+    </ng-template>
+    <!--<ng-template contextMenuItem (execute)="ouvrirModalEvenement()">
+        <ion-item [button]="true">
+            <ion-icon icon="remove-circle-outline" slot="start" color="primary" style="margin-right:5px"></ion-icon>
+            <ion-label color="primary">Bloquer les conteneurs</ion-label>
+        </ion-item>
+    </ng-template>-->
+</context-menu>
+
+<context-menu #leftContextMenu>
+    <ng-template contextMenuItem (execute)="showHideColumn(cIdx)"
+                 *ngFor="let col of options[choixActuel]; let cIdx=index">
+        <ion-item [button]="true" *ngIf="!col.fixed">
+            <ion-icon [icon]="columnsShowing[choixActuel][cIdx] ? 'checkmark-circle-outline':'close-circle-outline'" slot="start"
+                      [color]="columnsShowing[choixActuel][cIdx] ? 'success':'#CCC'" style="margin-right:5px"></ion-icon>
+            <ion-label [color]="columnsShowing[choixActuel][cIdx] ? 'black':'gray'">{{ col.column }}</ion-label>
+        </ion-item>
+    </ng-template>
+</context-menu>

@@ -1,0 +1,44 @@
+<kesykely-header></kesykely-header>
+<ion-content style="min-height: 300px; height:500px; padding:20px" [fullscreen]="true">
+    <h1 align="center">Liste des devises à convertir</h1>
+    <div style="width: 75%; margin:0 auto">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <h2>Devises disponibles</h2>
+                    <ion-searchbar animated="true" placeholder="Filtrer" show-clear-button="always" (ionInput)="filter($event)"></ion-searchbar>
+                    <ion-list inset="true" style="height: 600px;overflow-y: auto;border: 1px solid lightgray;border-radius:5px">
+                        <ion-item *ngFor="let flag of filteredFlags">
+                            <img style="width: 20px;border:1px solid lightgray" [src]="flag.flagBase64" />&nbsp;{{ flag.currencyCode }} - {{ flag.currencyName }} - {{ flag.name }}
+                            <ion-button slot="end" fill="clear" (click)="moveToSelected(flag.currencyCode,flag.flagBase64)">
+                                ➡️
+                            </ion-button>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+
+                <ion-col>
+                    <h2>Devises sélectionnés</h2>
+                    <ion-list inset="true" style="height: 600px;overflow-y: auto; margin-top:84px;border: 1px solid lightgray;border-radius:5px">
+                        <ion-item *ngFor="let selected of selectedItems">
+                            <img style="width: 20px;border:1px solid lightgray" [src]="selected.flag" />&nbsp;{{ selected.code }}
+                            <ion-button slot="end" fill="clear" (click)="moveToAvailable(selected.code,selected.flag)">
+                                ⬅️
+                            </ion-button>
+                        </ion-item>
+                    </ion-list>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" (click)="save()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,69 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title [innerText]="stock.id > 0 ?'Modifier un stock':'Ajouter un stock'"></ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content style="min-height: 300px;width:1024px">
+    <form [formGroup]="stockForm" (ngSubmit)="onSubmit()" style="padding:20px">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="name" label="Désignation"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('name', 'required')">
+                            Nom requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="number" formControlName="qte" label="Qté disponible"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('qte', 'required')">
+                            Quantité disponible requise.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="number" formControlName="prix" label="Prix"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('prix', 'required')">
+                            Prix requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="dureePrix" label="Durée du prix"
+                                    label-placement="floating">
+                            <ion-select-option *ngFor="let duree of dureePrix" [value]="duree.key"
+                                               [innerHTML]="duree.value"></ion-select-option>
+                        </ion-select>
+                        <ion-note color="danger" *ngIf="getFormControlError('dureePrix', 'required')">
+                            Durée du prix requise.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" [disabled]="stockForm.invalid" (click)="onSubmit()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

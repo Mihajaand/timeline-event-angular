@@ -1,0 +1,139 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title [innerText]="employer.id > 0 ?'Modifier un employer':'Ajouter un employer'"></ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content style="min-height: 500px;width:1024px">
+    <form [formGroup]="employerForm" (ngSubmit)="onSubmit()" style="padding:20px;">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="civilite" label="Civilité"
+                                    label-placement="floating">
+                            <ion-select-option *ngFor="let civilite of civilites" [value]="civilite.value"
+                                               [innerHTML]="civilite.label"></ion-select-option>
+                        </ion-select>
+                        <ion-note color="danger" *ngIf="getFormControlError('civilite', 'required')">
+                            Civilité requise.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="nom" label="Nom"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('nom', 'required')">
+                            Nom requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="prenom" label="Prénoms"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('prenom', 'required')">
+                            Prénoms requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="actif" label="Travaille ce jour ?"
+                                    label-placement="floating">
+                            <ion-select-option [value]="true">Oui</ion-select-option>
+                            <ion-select-option [value]="false">Non</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="color" formControlName="couleur" label="Couleur  de fond"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('couleur', 'required')">
+                            Couleur de fond requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="color" formControlName="couleurTexte" label="Couleur du texte"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('couleurTexte', 'required')">
+                            Couleur du texte requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="tel" placeholder="030 00 000 00" label="Téléphone"
+                                   mask="(+261) 00 00 000 00" (input)="applyMask($event)"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('tel', 'required')">
+                            Téléphone requis.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="email" formControlName="email" label="Email"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('email', 'email')">
+                            Email requise.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="date" formControlName="dateNaissance" label="Date de naissance"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('dateNaissance', 'required')">
+                            Date de naissance requise.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="observation" label="Observations"
+                                   label-placement="floating"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('observation', 'required')">
+                            Observation requiss.
+                        </ion-note>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" [disabled]="employerForm.invalid" (click)="onSubmit()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

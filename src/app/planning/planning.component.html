@@ -1,0 +1,24 @@
+<kesykely-header [showBackBtn]="true"></kesykely-header>
+<ion-content [fullscreen]="true">
+    <kesy-timeline-calendar
+        [options]="options"
+        [evenements]="allEvents"
+        [reportTables]="reportTables"
+        [tables]="allTables"
+        [reservations]="reservations"
+        [yearEvenements]="events"
+        [clients]="allClients"
+        [currencies]="currencies"
+        [stocks]="stocks"
+        [employersSPA]="employersSPA"
+        [flags]="flags"
+        [loading]="isReservationsLoaded"
+        [reservationBgColors]="reservationBgColors"
+        (reservationCreated)="createReservation($event)"
+        (reservationUpdated)="updateReservation($event)"
+        (reservationDeleted)="deleteReservation($event)"
+        (dateChanged)="getReservationsDate($event)"
+        (timelineEventCreated)="onEventCreated($event)"
+        (choixChanged)="choixChanged($event)"
+    ></kesy-timeline-calendar>
+</ion-content>

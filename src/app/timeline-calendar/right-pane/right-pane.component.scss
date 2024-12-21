@@ -1,0 +1,32 @@
+.employers-spa {
+    ion-item::part(native) {
+        height: 20px !important;
+    }
+
+    ion-item.item {
+        --padding-end: 5px;
+        --padding-start: 5px;
+        --inner-padding-end: 0;
+    }
+}
+
+ion-button.modSelector {
+    ::part(native) {
+        padding: 5px !important;
+    }
+}
+.cal-header.success{
+    background-color: #2dd36f;
+}
+.cal-header.secondary{
+    background-color: #3dc2ff;
+}
+.cal-header.tertiary{
+    background-color: #b983ff;
+}
+.cal-header.warning{
+    background-color: #ffc409;
+}
+.sortable{
+    cursor: pointer;
+}

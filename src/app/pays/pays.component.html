@@ -1,0 +1,38 @@
+<kesykely-header *ngIf="!isModal"></kesykely-header>
+<ion-header *ngIf="isModal">
+    <ion-toolbar>
+        <ion-title>Liste des pays</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content style="min-height: 500px" [style.width]="isModal?'1024px':'100%'">
+    <ion-searchbar
+        [(ngModel)]="searchTerm"
+        (ionInput)="filterCountries()"
+        placeholder="Rechercher un pays..."
+        animated="true"
+        autocomplete="officialName"
+    ></ion-searchbar>
+
+    <ion-list>
+        <ion-item *ngFor="let country of filteredCountries">
+            <ion-icon *ngIf="!isModal" [name]="country.favory?'star':'star-outline'" [color]="country.favory?'success':'warning'" (click)="setFavory(country)"></ion-icon>
+            <ion-avatar slot="start" style="border: 1px solid lightgray">
+                <img [src]="country.flagBase64" [alt]="'Drapeau de ' + country.name" />
+            </ion-avatar>
+            <ion-label>{{ country.name }}</ion-label>
+            <ion-label>{{ country.nationality }}</ion-label>
+            <ion-label>{{ country.officialName }}</ion-label>
+            <ion-label>{{ country.currencyName }}</ion-label>
+            <ion-label>{{ country.currencyCode }}</ion-label>
+            <ion-button (click)="selectPays(country)">Sélectionner</ion-button>
+        </ion-item>
+    </ion-list>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

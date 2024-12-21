@@ -1,0 +1,216 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title [innerText]="formData.id > 0 ?'Modifier une réservation':'Ajouter une réservation'"></ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content style="min-height: 300px;width:1024px">
+    <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()" style="padding:20px">
+        <ion-grid>
+            <ion-row *ngIf="!showComment">
+                <ion-col *ngIf="!showComment">
+                    <ion-item>
+                        <ion-label>
+                            <div *ngIf="formData.client">
+                                <h2>CLIENT
+                                    : {{formData.client.civilite + ' ' + formData.client.nom + ' ' + formData.client.prenom}}
+                                    <img [src]="formData.client.pays.flagBase64"
+                                         style="width: 15px;border: 1px solid lightgray;"/></h2>
+                                <p>
+                                    <ion-icon icon="call"></ion-icon>
+                                    {{formData.client.tel + (formData.client.tel2 ? ' / ' + formData.client.tel2 : '')}}
+                                </p>
+                                <p>
+                                    <ion-icon icon="mail"></ion-icon>
+                                    {{formData.client.email}}</p>
+                            </div>
+                            <div *ngIf="!formData.client" slot="label">Client
+                                <ion-text color="danger">(Obligatoire)</ion-text>
+                            </div>
+                            <ion-button fill="clear" slot="end" aria-label="Show/hide password"
+                                        (click)="openClientPopup()">
+                                <ion-icon slot="icon-only" name="eye"></ion-icon>
+                                Sélectionner un autre client
+                            </ion-button>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label class="form-popup">
+                            <div>{{options[choixActuel][0].column}}
+                                : {{formData.table.nom }}
+                                <br />
+                                Emplacement : {{formData.table.emplacement}}<br />
+                                <div style="display:inline-block;" [class]="formData.table.type" [style.width]="(choixActuel == 'SPA' || choixActuel == 'Lavage')?'15%':''">
+                                    <img [src]="personBase64" style="width:10px"/>
+                                    {{formData.table.nbPlace}}
+                                </div>
+                            </div>
+                            <ion-button fill="clear" slot="end" aria-label="Show/hide password"
+                                        (click)="openTablePopup()">
+                                <ion-icon slot="icon-only" name="eye"></ion-icon>
+                                Sélectionner un(e) autre {{options[choixActuel][0].column}}
+                            </ion-button>
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+                <ion-col *ngIf="!showComment">
+                    <ion-item>
+                        <ion-input type="number" formControlName="nbPerson" label="Nombre de personnes (Nb. Max. pour ce conteuneur : {{maxNbPlaces}})" #nameInput
+                                   label-placement="floating" [max]="maxNbPlaces" min="1"></ion-input>
+                        <ion-note color="danger" *ngIf="getFormControlError('nbPerson', 'required')">
+                            Nombre de personnes requis.
+                        </ion-note>
+                    </ion-item>
+                    <ion-row>
+                        <ion-col>
+                            <ion-item>
+                                <ion-input type="date" formControlName="begin" label="Date de début" date
+                                           labelPlacement="floating" [min]="minDate| date:'yyyy-MM-dd'"
+                                           (change)="checkBeginDate($event)"
+                                />
+                            </ion-item>
+                            <ion-note color="danger" *ngIf="getFormControlError('begin', 'required')">
+                                Date de début requis.
+                            </ion-note>
+                        </ion-col>
+                        <ion-col>
+                            <ion-item>
+                                <ion-input type="time" formControlName="beginHour" label="Heure de début"
+                                           label-placement="floating"
+                                />
+                            </ion-item>
+                            <ion-note color="danger" *ngIf="getFormControlError('beginHour', 'required')">
+                                Heure de début requis.
+                            </ion-note>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <ion-item>
+                                <ion-input type="date" formControlName="end" label="Date de fin"
+                                           label-placement="floating"
+                                           [min]="reservationForm.get('begin').value| date:'yyyy-MM-dd'"
+                                />
+                            </ion-item>
+                            <ion-note color="danger" *ngIf="getFormControlError('end', 'required')">
+                                Date de fin requis.
+                            </ion-note>
+                        </ion-col>
+                        <ion-col>
+                            <ion-item>
+                                <ion-input type="time" formControlName="endHour" label="Heure de fin"
+                                           label-placement="floating"
+                                />
+                            </ion-item>
+                            <ion-note color="danger" *ngIf="getFormControlError('endHour', 'required')">
+                                Heure de fin requis.
+                            </ion-note>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col *ngIf="choixActuel == 'SPA' || choixActuel == 'Lavage'">
+                            <ion-label style="display: flex; flex-direction: row">
+                                <h4 *ngIf="employer1Obj.civilite != ''" style="width:25%">Employé 1 : </h4>
+                                <ion-item *ngIf="employer1Obj.civilite != ''"
+                                          style="display:inline;width: 50%; --background:{{employer1Obj.couleur}}; height:100%">
+                                    <ion-icon slot="end" [color]="employer1Obj.actif == 1 ?'success':'danger'"
+                                              [name]="employer1Obj.actif == 1 ?'checkmark-circle':'close-circle'">&nbsp;
+                                    </ion-icon>
+                                    <ion-label style="text-align:left; margin: 0!important;" [style.color]="employer1Obj.couleurTexte">
+                                        {{employer1Obj.civilite}} {{employer1Obj.prenom}}
+                                    </ion-label>
+                                </ion-item>
+                                <div *ngIf="employer1Obj.civilite == ''" slot="label">Employé 1 :
+                                    <ion-text color="danger">(Obligatoire)</ion-text>
+                                </div>
+                                <ion-button (click)="openEmployersModal(1)" style="display: inline" size="small">Modifier</ion-button>
+                            </ion-label>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col *ngIf="choixActuel == 'SPA' || choixActuel == 'Lavage'">
+                            <ion-label style="display: flex; flex-direction: row">
+                                <h4 style="width:25%">Employé 2 : </h4>
+                                <ion-item *ngIf="employer2Obj.civilite != ''"
+                                          style="display:inline;width: 50%; --background:{{employer2Obj.couleur}}; height:100%">
+                                    <ion-icon slot="end" [color]="employer2Obj.actif == 1 ?'success':'danger'"
+                                              [name]="employer2Obj.actif == 1 ?'checkmark-circle':'close-circle'">&nbsp;
+                                    </ion-icon>
+                                    <ion-label style="text-align:left; margin: 0!important;" [style.color]="employer2Obj.couleurTexte">
+                                        {{employer2Obj.civilite}} {{employer2Obj.prenom}}
+                                    </ion-label>
+                                </ion-item>
+                                <ion-button (click)="openEmployersModal(2)" style="display: inline" size="small">Modifier</ion-button>
+                            </ion-label>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngIf="!showComment">
+                <ion-col size="12">
+                    <ion-item style="padding:20px">
+                        <ion-textarea formControlName="commentaire"
+                                      label="Observations"
+                                      placeholder="Veuillez saisir vos observations ici."
+                                      label-placement="floating"
+                                      rows="6"
+                                      auto-grow="true"
+                        >
+                        </ion-textarea>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngIf="showComment">
+                <ion-col size="12">
+                    <ion-item>
+                        <ion-label>
+                            <h2>CLIENT
+                                : {{formData.client.civilite + ' ' + formData.client.nom + ' ' + formData.client.prenom}}
+                                <img [src]="formData.client.pays.flagBase64"
+                                     style="width: 15px;border: 1px solid lightgray;"/></h2>
+                            <p>
+                                <ion-icon icon="call"></ion-icon>
+                                {{formData.client.tel + (formData.client.tel2 ? ' / ' + formData.client.tel2 : '')}}</p>
+                            <p>
+                                <ion-icon icon="mail"></ion-icon>
+                                {{formData.client.email}}</p>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label class="form-popup">
+                            <div>
+                                {{choixActuel == 'Restaurant' ? 'TABLE' : 'CHAMBRE'}}
+                                : {{formData.table.nom + ' - ' + formData.table.emplacement + ' '}}
+                                <div style="display:inline-block" [class]="formData.table.type">
+                                    <img [src]="personBase64" style="width:10px"/>
+                                    {{formData.table.nbPlace}}
+                                </div>
+                            </div>
+                            <ion-button fill="clear" slot="end" aria-label="Show/hide password"
+                                        (click)="openTablePopup()">
+                                <ion-icon slot="icon-only" name="eye"></ion-icon>
+                                Sélectionner une autre {{choixActuel == 'Restaurant' ? 'table' : 'chambre'}}
+                            </ion-button>
+                        </ion-label>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" [disabled]="reservationForm.invalid" (click)="onSubmit()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>
+
+
+

@@ -1,0 +1,130 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title [innerText]="isNew ? 'Modifier un événement' : 'Ajouter un événement'"></ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content
+    style="min-height: 400px; min-width: 800px; padding-left: 50px !important; align-items: center; justify-content: center; width:1024px">
+    <form [formGroup]="evenementForm" (ngSubmit)="onSubmit()" *ngIf="isNew">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="bordered">
+                        <ion-input type="text" formControlName="nom" label="Nom de l'évènement"
+                                   labelPlacement="floating"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="bordered">
+                        <ion-input type="date" formControlName="debut" label="Date de début"
+                                   labelPlacement="floating"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item class="bordered">
+                        <ion-input type="time" formControlName="heureDebut" label="Heure de début"
+                                   labelPlacement="floating"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="bordered">
+                        <ion-input type="date" formControlName="fin" label="Date de fin"
+                                   labelPlacement="floating"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item class="bordered">
+                        <ion-input type="time" formControlName="heureFin" label="Heure de fin"
+                                   labelPlacement="floating"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-item class="bordered">
+                        <ion-input type="color" formControlName="couleur" label="Couleur de fond"
+                                   labelPlacement="floating"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item class="bordered">
+                        <ion-input type="color" formControlName="couleurTexte" label="Couleur du texte"
+                                   labelPlacement="floating"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+    <ion-grid *ngIf="!isNew" class="list">
+        <ion-row>
+            <ion-col>Nom</ion-col>
+            <ion-col>Début</ion-col>
+            <ion-col>Heure début</ion-col>
+            <ion-col>Fin</ion-col>
+            <ion-col>Heure de fin</ion-col>
+            <ion-col>Couleur de fond</ion-col>
+            <ion-col>Couleur du texte</ion-col>
+            <ion-col>
+                <ion-button color="success" fill="outline" size="small" (click)="nouveau()">
+                    <ion-icon name="add"></ion-icon> Ajouter
+                </ion-button>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let event of yearEvenements">
+            <ion-col>
+                <ion-label [innerText]="event.nom"></ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label [innerText]="dateObjToString(event.debut)"></ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label [innerText]="event.heureDebut"></ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label [innerText]="dateObjToString(event.fin)"></ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label [innerText]="event.heureFin"></ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label [innerText]="event.couleur"></ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label [innerText]="event.couleurTexte"></ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-button fill="outline" shape="round" size="small" (click)="onEditEvent(event)">
+                    <ion-icon name="pencil" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button color="danger" fill="outline" shape="round" size="small" (click)="deleteEvent(event)">
+                    <ion-icon name="trash" slot="icon-only"></ion-icon>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+<ion-footer>
+    <ion-toolbar *ngIf="isNew">
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="close()">Annuler et Fermer</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-button fill="outline" type="submit" [disabled]="evenementForm.invalid" (click)="onSubmit()">
+                Enregistrer
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    <ion-toolbar *ngIf="!isNew">
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="close()">Fermer</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

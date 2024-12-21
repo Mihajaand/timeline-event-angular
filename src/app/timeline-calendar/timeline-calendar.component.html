@@ -1,0 +1,32 @@
+<div class="container">
+    <kesy-calendar-left-pane
+        [options]="options"
+        [loading]="loaded"
+        [allReservations]="all_reservations"
+        [choix]="choixActuel"
+    ></kesy-calendar-left-pane>
+    <kesy-calendar-right-pane
+        [options]="options"
+        [evenements]="all_evenements"
+        [reportTables]="reportTables"
+        [all_tables]="allTables"
+        [clients]="clients"
+        [choix]="choix"
+        [allReservations]="all_reservations"
+        [yearEvenements]="yearEvenements"
+        [reservationBgColors]="reservationBgColors"
+        [currencies]="currencies"
+        [stocks]="stocks"
+        [choixActuel]="choixActuel"
+        [employersSPA]="employersSPA"
+        [flags]="flags"
+        [loading]="loaded"
+        (dateChanged)="dateChanged.emit($event)"
+        (reservationUpdated)="reservationUpdated.emit($event)"
+        (reservationCreated)="reservationCreated.emit($event)"
+        (reservationDeleted)="reservationDeleted.emit($event)"
+        (choixChanged)="changeChoix($event)"
+        (evenementCreated)="onEventCreated($event)"
+    ></kesy-calendar-right-pane>
+</div>
+

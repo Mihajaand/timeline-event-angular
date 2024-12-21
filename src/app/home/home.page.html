@@ -1,0 +1,58 @@
+<kesykely-header></kesykely-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+      <ion-buttons class="top-menu align-items-center" style="width: 50%;margin: 0 auto;display: flex;flex-direction: row;flex-wrap: wrap;">
+          <ion-button size="large" color="success" fill="outline" href="/planning">
+              <ion-col>
+                  <div style="display: block">
+                      <ion-icon name="calendar" size="large" mode="ios"></ion-icon>
+                  </div>
+                  <div>PLANNING</div>
+              </ion-col>
+          </ion-button>
+          <ion-button size="large" fill="outline" color="primary">
+              <ion-col>
+                  <div style="display: block">
+                      <ion-icon name="apps" size="large" mode="ios"></ion-icon>
+                  </div>
+                  <div>NOTES EN COURS</div>
+              </ion-col>
+          </ion-button>
+          <ion-button size="large" color="medium" fill="outline" color="danger">
+              <ion-col>
+                  <div style="display: block">
+                      <ion-icon name="apps" size="large" mode="ios"></ion-icon>
+                  </div>
+                  <div>FACTURES EN COURS</div>
+              </ion-col>
+          </ion-button>
+          <ion-button size="large" color="medium" fill="outline" href="/conteneurs">
+              <ion-col>
+                  <div style="display: block">
+                      <ion-icon name="apps" size="large" mode="ios"></ion-icon>
+                  </div>
+                  <div>Conteneurs</div>
+              </ion-col>
+          </ion-button>
+          <ion-button size="large" fill="outline" href="/clients" color="primary">
+              <ion-col>
+                  <div style="display: block">
+                      <ion-icon name="people" size="large" mode="ios"></ion-icon>
+                  </div>
+                  <div>CLIENTS</div>
+              </ion-col>
+          </ion-button>
+          <ion-button size="large" fill="outline" color="secondary" class="ion-text-center align-items-center"
+                      title="I'm a tooltip below a button"
+                      (click)="openConfigMenu($event)">
+              <ion-col>
+                  <div style="display: block">
+                      <ion-icon name="settings" size="large" mode="ios"></ion-icon>
+                  </div>
+                  <div>CONFIG.</div>
+              </ion-col>
+          </ion-button>
+      </ion-buttons>
+  </div>
+</ion-content>

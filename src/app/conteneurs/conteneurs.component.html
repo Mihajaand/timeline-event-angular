@@ -1,0 +1,70 @@
+<kesykely-header *ngIf="!isModal"></kesykely-header>
+<ion-header *ngIf="isModal">
+    <ion-toolbar>
+        <ion-title><h1>Liste des tables</h1></ion-title>
+        <ion-button (click)="nouveauTable()" slot="end" color="success" fill="outline">
+            <ion-icon icon="add"></ion-icon>
+            Nouveau(lle) {{choixActuel}}
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+<ion-item *ngIf="!isModal">
+    <ion-button (click)="nouveauTable()" slot="end" color="success" fill="outline">
+        <ion-icon icon="add"></ion-icon>
+        Nouveau(lle) {{choixActuel}}
+    </ion-button>
+</ion-item>
+<ion-content style="min-height: 300px; height:500px; padding:20px" [fullscreen]="!isModal"
+             [style.width]="isModal?'1024px':'100%'">
+
+    <ion-list style="margin:0 auto" [style.width]="(isModal?100:75)+'%'">
+        <ion-item *ngIf="!isModal">
+            <ion-buttons style="display:flex; flex-direction: row">
+                <ng-container *ngFor="let c of choix; let idx=index">
+                    <ion-button (click)="changeChoix(c.key  )" [fill]="c.key == choixActuel ? 'solid' : 'outline'"
+                                [style.border-bottom]="c.key == choixActuel ? '2px solid red' : 'inherit'"
+                                [color]="colors[idx]" [size]="c.key==choixActuel ?'medium':'small'">
+                        <ion-icon name="briefcase"></ion-icon>
+                        <ion-label>&nbsp;{{c.value}}</ion-label>
+                    </ion-button>
+                </ng-container>
+            </ion-buttons>
+        </ion-item>
+        <ion-item *ngFor="let table of data">
+            <ion-label [style.background-color]="table.couleur"
+                       [style.color]="table.couleurTexte" style="padding:5px">
+                <div class="col-4"># {{ table.nom }}</div>
+                <div class="col-8">
+                    <div class="{{table.type}}">
+                        <img src="{{personBase64}}" style="width:15px"/>{{table.nbPlace}}
+                    </div>
+                </div>
+            </ion-label>
+            <ion-label
+                style="padding-left:5%;display: flex;    flex-direction: row;    flex-wrap: nowrap;    align-content: center;    justify-content: space-around;    align-items: center;">
+                <div style="flex: 0 0 50%;"><strong>Forme : </strong>{{table.forme}}</div>
+                <div style="flex: 0 0 50%;"><strong>Capacité : </strong>{{table.nbPlace}}</div>
+                <div style="flex: 0 0 50%;"><strong>Emplacement : </strong>{{table.emplacement}}</div>
+            </ion-label>
+            <ion-label class="ion-text-right">
+                <ion-button color="success" fill="outline" *ngIf="isModal" (click)="selectTable(table)">
+                    <ion-icon icon="checkmark-circle-outline" slot="start"></ion-icon>
+                    Selectionner
+                </ion-button>
+                <ion-button color="secondary" fill="outline" *ngIf="!isModal" (click)="editTable(table)">
+                    <ion-icon icon="create" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button color="danger" fill="outline" *ngIf="!isModal" (click)="deleteTable(table)">
+                    <ion-icon icon="trash" slot="icon-only"></ion-icon>
+                </ion-button>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

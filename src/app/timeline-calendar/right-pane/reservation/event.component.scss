@@ -1,0 +1,42 @@
+.container {
+  position: relative;
+  background-color: gray;
+}
+
+.full {
+  width: 100%;
+  background: yellow;
+}
+
+.dragHandle {
+  position: absolute;
+  background-color: #ffaa00;
+}
+
+.dragHandle.corner {
+  width: 15px;
+  height: 15px;
+  cursor: nwse-resize;
+}
+
+.dragHandle.right {
+  width: 2px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.dragHandle.bottom {
+  height: 2px;
+  width: 100%;
+  cursor: ns-resize;
+}
+
+::ng-deep .mat-tooltip {
+  /* your own custom styles here */
+  /* e.g. */
+  background-color: black !important;
+  color: white !important;
+}
+ion-textarea{
+  margin-top:15px
+}

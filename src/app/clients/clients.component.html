@@ -1,0 +1,65 @@
+<kesykely-header *ngIf="!isModal"></kesykely-header>
+<ion-header *ngIf="isModal">
+    <ion-toolbar>
+        <ion-title><h1>Liste des clients</h1></ion-title>
+        <ion-button (click)="nouveauClient()" slot="end" color="success" fill="outline">
+            <ion-icon icon="add"></ion-icon>
+            Nouveau client
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+<ion-item *ngIf="!isModal">
+    <ion-button (click)="nouveauClient()" slot="end" color="success" fill="outline">
+        <ion-icon icon="add"></ion-icon>
+        Nouveau client
+    </ion-button>
+</ion-item>
+<ion-content style="min-height: 300px; height:500px; padding:20px" [fullscreen]="!isModal"
+             [style.width]="isModal?'1024px':'100%'">
+    <ion-list style="width: 75%; margin:0 auto">
+        <ion-item *ngFor="let client of clients" (click)="selectClient(client)">
+            <ion-label style="text-align: center; width: 10%">
+                <ion-icon [name]="client.categorieClient == 'societe'?'briefcase':'man'" slot="start"></ion-icon>
+                <div style="font-size:10px" *ngIf="client.categorieClient== 'societe'">Sté. {{client.raisonSociale}}</div>
+                <div style="font-size:10px" *ngIf="client.categorieClient!= 'societe'">Particulier</div>
+            </ion-label>
+            <ion-label style="width:50%">
+                <h1>
+                    <small>{{getCiviliteText(client.civilite)}}</small>
+                    <br />
+                    {{ client.nom }} {{ client.prenom }}
+                    <ion-avatar style="display: inline">
+                        <img [src]="client?.pays?.flagBase64" [alt]="'Drapeau de ' + client?.pays?.name"  style="width: 25px;height: 25px;border: 1px solid lightgray;"/>
+                    </ion-avatar>
+                </h1>
+            </ion-label>
+            <ion-label style="width:30%">
+                <small>
+                    <ion-icon icon="call"></ion-icon>
+                    {{ client.tel }}{{ client.tel2 ? ' / ' + client.tel2 : '' }}<br/>
+                    <ion-icon icon="mail"></ion-icon>
+                    {{ client.email }}
+                </small>
+            </ion-label>
+            <ion-label class="ion-text-right">
+                <ion-button color="success" fill="outline" *ngIf="isModal" (click)="selectClient(client)">
+                    <ion-icon icon="checkmark-circle-outline" slot="start"></ion-icon>
+                    Selectionner
+                </ion-button>
+                <ion-button color="secondary" fill="outline" *ngIf="!isModal" (click)="editClient(client)">
+                    <ion-icon icon="create" slot="icon-only"></ion-icon>
+                </ion-button>
+                <ion-button color="danger" fill="outline" *ngIf="!isModal" (click)="deleteClient(client)">
+                    <ion-icon icon="trash" slot="icon-only"></ion-icon>
+                </ion-button>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button fill="outline" (click)="cancel()">Annuler</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

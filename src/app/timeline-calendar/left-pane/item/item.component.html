@@ -1,0 +1,54 @@
+<ng-container *ngIf="load && data.length > 0">
+    <ion-item *ngFor="let reservation of data" class="item">
+        <ion-label [style.color]="getBgColors('couleurTexte',reservation)"
+                   [style.background]="reservation.employer2  ? 'linear-gradient('+getBgColors('couleur',reservation)+','+reservation.employer2.couleur+')':getBgColors('couleur',reservation)"
+                   KesikelyReservationToolTip
+                   [reservation]="reservation"
+                   [choixActuel]="choixActuel"
+                   [options]="options">
+            <div class="width15">
+                <img class="width15" [src]="reservation.client.pays.flagBase64"/>
+            </div>
+            <div class="ellipsis">
+                <strong># {{reservation.table.nom + ' – ' + reservation.nbPerson + 'P - ' + reservation.client.civilite + ' ' + reservation.client.nom + ' ' + reservation.client.prenom }}</strong>
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;">
+                Résa N° {{reservation.id + ' du '}}
+                    {{reservation.begin| date}},
+                de {{reservation.beginHour}} à {{reservation.endHour}}
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;">
+                Acompte N° ______ - 50 000 MGA - Date
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;" *ngIf="reservation.status ==0">
+                Note N° ______ - 50 000 MGA
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;" *ngIf="reservation.status ==2">
+                Facture N° ______ - 50 000 MGA
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;" *ngIf="reservation.status ==2">
+                Reste à payer :
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;" *ngIf="reservation.status ==2">
+                Paiement 1 : Mvola 50 000 MGA
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;" *ngIf="reservation.status ==2">
+                Paiement 2: Espèce 50 000 MGA
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;" *ngIf="reservation.status ==2">
+                Total : 150 000 MGA
+            </div>
+            <div class="ellipsis" style="font-size:11px !important;">
+                Obs : {{ reservation.commentaire }}
+            </div>
+        </ion-label>
+        <ng-template #template>
+            <div style="display: flex; flex-direction: column; width:300px; font-size:11px;padding:5px"
+                 [style.background-color]="reservation.table.couleur"
+                 [style.color]="reservation.table.couleurTexte"
+            >
+                <div [innerHTML]="reservation.reservationTooltipHtml"></div>
+            </div>
+        </ng-template>
+    </ion-item>
+</ng-container>
